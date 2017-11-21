@@ -107,3 +107,7 @@ conf/duforrak.auth
 conf/duforrak_uwsgi.ini
 conf/duforrak_uwsgi.ini
 conf/nginx.conf
+duforrak/conf/site_settings.py
+duforrak/db/db.sqlite3
+static/*
+media/*
