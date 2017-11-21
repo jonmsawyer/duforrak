@@ -1,0 +1,47 @@
+# nginx.conf
+
+# the upstream component nginx needs to connect to
+upstream duforrak_uwsgi {
+    server unix:///var/run/uwsgi/duforrak_uwsgi.sock; # for a file socket
+    #server 127.0.0.1:8001; # for a web port socket (we'll use this first)
+}
+
+# configuration of the server
+server {
+    listen       80;
+    listen       443 ssl;
+    server_name duforrak.local; # substitute your machine's IP address or FQDN
+    ssl_certificate      /etc/nginx/cert/ssl.crt;
+    ssl_certificate_key  /etc/nginx/cert/ssl.key;
+    ssl_session_cache shared:SSL:1m;
+    ssl_session_timeout  5m;
+    ssl_ciphers  HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers   on;
+    root /path/to/duforrak.git/htdocs;
+    charset     utf-8;
+
+    # max upload size
+    client_max_body_size 110M;   # adjust to taste
+
+    if ($ssl_protocol = "") {
+        rewrite ^   https://$server_name$request_uri? permanent;
+    }
+
+    auth_basic "duforrak.local";
+    auth_basic_user_file /path/to/duforrak.git/conf/duforrak.auth;
+
+    # Django media
+    location /media  {
+        alias /path/to/duforrak.git/media;  # your Django project's media files - amend as required
+    }
+
+    location /static {
+        alias /path/to/duforrak.git/static; # your Django project's static files - amend as required
+    }
+
+    # Finally, send all non-media requests to the Django server.
+    location / {
+        uwsgi_pass  duforrak_uwsgi;
+        include     /etc/nginx/uwsgi_params; # the uwsgi_params file you installed
+    }
+}

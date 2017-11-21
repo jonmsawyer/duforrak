@@ -1,0 +1,31 @@
+# duforrak_uwsgi.ini file
+[uwsgi]
+
+# Django-related settings
+# the base directory (full path)
+chdir           = /path/to/duforrak.git
+# Django's wsgi file
+module          = duforrak.wsgi
+# the virtualenv (full path)
+home            = /path/to/virtualenvs/duforrak
+
+# process-related settings
+# master
+master          = true
+# maximum number of worker processes
+processes       = 5
+# the socket (use the full path to be safe
+#socket          = /var/run/uwsgi/%n.sock
+#pidfile         = /var/run/uwsgi/%n.pid
+# ... with appropriate permissions - may be needed
+#chmod-socket    = 660
+# clear environment on exit
+#vacuum          = true
+uid             = nginx
+#gid             = nginx
+#harakiri        = 20
+max-requests    = 5000
+#daemonize       = /var/log/uwsgi/%n.log
+#logto           = /var/log/uwsgi/%n.log
+touch-reload    = /path/to/duforrak.git/reload_duforrak
+

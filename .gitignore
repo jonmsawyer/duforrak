@@ -99,3 +99,11 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# duforrak
+3rd_party
+jmsweb
+conf/duforrak.auth
+conf/duforrak_uwsgi.ini
+conf/duforrak_uwsgi.ini
+conf/nginx.conf
